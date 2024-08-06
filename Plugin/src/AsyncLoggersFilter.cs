@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using AsyncLoggers.Filter.Dependency;
 using AsyncLoggers.Filter.Patches;
@@ -23,7 +24,7 @@ namespace AsyncLoggers.Filter
 		
         public const string GUID = "mattymatty.AsyncLoggers.Filter";
         public const string NAME = "AsyncLoggers.Filter";
-        public const string VERSION = "1.0.0";
+        public const string VERSION = "1.0.1";
 
         internal static ManualLogSource Log;
 
@@ -61,13 +62,20 @@ namespace AsyncLoggers.Filter
 	        
 	        internal class ModConfig
 	        {
-		        internal ILogSource Source { get; }
-		        
+		        internal ILogSource Source { get; private protected set; }
+
 		        internal ConfigEntry<bool> EnabledConfig { get; }
-		        internal bool Enabled { get; private set; }
+		        internal bool Enabled {  get; private protected set; }
 		        
 		        internal ConfigEntry<LogLevel> LogLevelsConfig { get; }
-		        internal LogLevel LogLevels { get; private set; }
+		        internal LogLevel LogLevels { get; private protected set; }
+
+		        public ModConfig(ILogSource source, bool enabled, LogLevel logLevels)
+		        {
+			        Source = source;
+			        Enabled = enabled;
+			        LogLevels = logLevels;
+		        }
 
 		        internal ModConfig(ILogSource source)
 		        {
@@ -100,7 +108,7 @@ namespace AsyncLoggers.Filter
 		        }
 	        }
 
-	        internal static readonly ConcurrentDictionary<ILogSource, ModConfig> ModConfigs = new();
+	        internal static readonly ConditionalWeakTable<ILogSource, ModConfig> ModConfigs = new();
 	        
             internal static void Init()
             {
@@ -108,12 +116,15 @@ namespace AsyncLoggers.Filter
 
                 if (LethalConfigProxy.Enabled)
                 {
+	                LethalConfigProxy.SkipAutoGen();
 	                LethalConfigProxy.AddButton("Cleanup", "Clear old entries", "remove unused entries in the config file", "Clean&Save", CleanAndSave);
                 }
                 
-                foreach (var source in BepInEx.Logging.Logger.Sources)
+                ModConfigs.Add(Log,new ModConfig(Log, true , LogLevel.All));
+                if (AsyncLoggerProxy.Enabled)
                 {
-	                ModConfigs[source] = new ModConfig(source);
+	                var log = AsyncLoggerProxy.GetLogger();
+	                ModConfigs.Add(log, new ModConfig(log, true , LogLevel.All));
                 }
             }
 

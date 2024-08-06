@@ -29,6 +29,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using AsyncLoggers.DBAPI;
+using BepInEx.Logging;
 
 namespace AsyncLoggers.Filter.Dependency
 {
@@ -43,7 +44,7 @@ namespace AsyncLoggers.Filter.Dependency
                     return _enabled.Value;
                 try
                 {
-                    _enabled = isDbEnabled();
+                    _enabled = IsDbEnabled();
                 }catch (Exception)            
                 {                
                     _enabled = false;
@@ -66,15 +67,21 @@ namespace AsyncLoggers.Filter.Dependency
         }
     
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        public static bool isDbEnabled()
+        public static bool IsDbEnabled()
         {
             return SqliteLogger.Enabled;
         }
     
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        public static int getExecutionID()
+        public static int GetExecutionID()
         {
             return SqliteLogger.ExecutionId;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static ILogSource GetLogger()
+        {
+            return AsyncLoggers.Log;
         }
     
     }

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BepInEx.Logging;
 using HarmonyLib;
 using MonoMod.RuntimeDetour;
-using Timer = System.Timers.Timer;
 
 namespace AsyncLoggers.Filter.Patches;
 
@@ -21,12 +19,22 @@ internal static class BepInExLogger
         {
             lock (NewSources)
             {
-                foreach (var source in NewSources.Where(source => !AsyncLoggersFilter.PluginConfig.ModConfigs.ContainsKey(source)))
+                foreach (var source in NewSources) 
                 {
-                    AsyncLoggersFilter.Log.LogInfo($"Registering {source.SourceName}");
+                    try
+                    {
+                        if (AsyncLoggersFilter.PluginConfig.ModConfigs.TryGetValue(source, out _))
+                            continue;
 
-                    AsyncLoggersFilter.PluginConfig.ModConfigs[source] =
-                        new AsyncLoggersFilter.PluginConfig.ModConfig(source);
+                        AsyncLoggersFilter.Log.LogInfo($"Registering {source.SourceName}");
+
+                        AsyncLoggersFilter.PluginConfig.ModConfigs.AddOrUpdate(source,
+                            new AsyncLoggersFilter.PluginConfig.ModConfig(source));
+                    }
+                    catch (Exception ex)
+                    {
+                        AsyncLoggersFilter.Log.LogError($"Exception Registering {source.SourceName}:\n{ex}");
+                    }
                 }
 
                 NewSources.Clear();
@@ -64,9 +72,16 @@ internal static class BepInExLogger
         }
         else
         {
-            lock (NewSources)
+            bool lockWasTaken = false;
+            try
             {
-                NewSources.Add(eventArgs.Source);
+                System.Threading.Monitor.TryEnter(NewSources, ref lockWasTaken);
+                if(lockWasTaken)
+                    NewSources.Add(eventArgs.Source);
+            }
+            finally
+            {
+                if (lockWasTaken) System.Threading.Monitor.Exit(NewSources);
             }
         }
 

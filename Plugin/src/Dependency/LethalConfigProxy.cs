@@ -1,14 +1,10 @@
 using System;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using BepInEx;
 using BepInEx.Configuration;
-using BepInEx.Logging;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 using LethalConfig.ConfigItems.Options;
-using UnityEngine;
 
 namespace AsyncLoggers.Filter.Dependency
 {
@@ -23,6 +19,12 @@ namespace AsyncLoggers.Filter.Dependency
                 _enabled ??= BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("ainavt.lc.lethalconfig");
                 return _enabled.Value;
             }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void SkipAutoGen()
+        {
+            LethalConfigManager.SkipAutoGen();
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
