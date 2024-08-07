@@ -66,7 +66,7 @@ public class AsyncLoggersFilter
             public ConfigEntry<LogLevel> LogLevelsConfig { get; }
             public LogLevel LogLevels { get; private protected set; }
 
-            internal ModConfig(ILogSource source, bool enabled, LogLevel logLevels)
+            public ModConfig(ILogSource source, bool enabled, LogLevel logLevels)
             {
                 Source = source;
                 Enabled = enabled;

@@ -1,3 +1,6 @@
+### v1.1.1
+- small optimization
+
 ### v1.1.0
 - rewritten as a preloader
 - more reactive source registration

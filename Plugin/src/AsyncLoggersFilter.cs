@@ -18,7 +18,7 @@ internal class AsyncLoggersFilter : BaseUnityPlugin
 		
 	public const string GUID = "mattymatty.AsyncLoggers.Filter";
 	public const string NAME = "AsyncLoggers.Filter";
-	public const string VERSION = "1.1.0";
+	public const string VERSION = "1.1.1";
 
 	internal static ManualLogSource Log;
             
@@ -27,6 +27,7 @@ internal class AsyncLoggersFilter : BaseUnityPlugin
 	        
 		INSTANCE = this;
 		Log = Logger;
+		Preloader.AsyncLoggersFilter.PluginConfig.ModConfigs.Add(Logger, new Preloader.AsyncLoggersFilter.PluginConfig.ModConfig(Logger, true, LogLevel.All));
 		try
 		{
 			if (LobbyCompatibilityChecker.Enabled)

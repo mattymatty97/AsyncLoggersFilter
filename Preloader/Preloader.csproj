@@ -4,7 +4,7 @@
         <RootNamespace>AsyncLoggers.Filter.Preloader</RootNamespace>
         <AssemblyName>AsyncLoggers.Filter.Preloader</AssemblyName>
         <Product>AsyncLoggers.Filter.Preloader</Product>
-        <Version>1.1.0</Version>
+        <Version>1.1.1</Version>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>Latest</LangVersion>
@@ -17,6 +17,7 @@
     <!-- Defining the reference files that have to be publicized. -->
     <ItemGroup>
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all"/>
+        
         <Reference Include="$(SolutionDir)\Dependencies\LethalConfig.dll" Publicize="true"/>
         <Reference Include="$(SolutionDir)\Dependencies\AsyncLoggers.dll" Publicize="true"/>
     </ItemGroup>
