@@ -1,7 +1,7 @@
 {
   "name": "AsyncLoggers_Filter",
-  "version_number": "1.0.1",
-  "website_url": "https://github.com/mattymatty97/LTC_AsyncLoggers.Filter",
+  "version_number": "1.1.0",
+  "website_url": "https://github.com/mattymatty97/LTC_AsyncLoggersFilter",
   "description": "Set Log Level for each Mod independently",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2100",

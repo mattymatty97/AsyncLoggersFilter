@@ -4,7 +4,7 @@
         <RootNamespace>AsyncLoggers.Filter</RootNamespace>
         <AssemblyName>AsyncLoggers.Filter</AssemblyName>
         <Product>AsyncLoggers.Filter</Product>
-        <Version>1.0.1</Version>
+        <Version>1.1.0</Version>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>Latest</LangVersion>
@@ -27,6 +27,7 @@
         <!--<Reference Include="$(SolutionDir)\Dependencies\Assembly-CSharp.pdll" Publicize="true"/>-->
         <Reference Include="$(SolutionDir)\Dependencies\LethalConfig.dll" Publicize="true"/>
         <Reference Include="$(SolutionDir)\Dependencies\AsyncLoggers.dll" Publicize="true"/>
+        <Reference Include="$(SolutionDir)\Thunderstore\BepInEx\patchers\AsyncLoggers.Filter.Preloader.dll" Publicize="true"/>
 
         <!-- clean referencing -->
         <Reference Include="$(GameDirectory)\Lethal Company_Data\Managed\Unity.TextMeshPro.dll" Publicize="false"/>

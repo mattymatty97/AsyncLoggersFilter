@@ -1,12 +1,13 @@
 using System;
 using System.Globalization;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using BepInEx.Configuration;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 using LethalConfig.ConfigItems.Options;
 
-namespace AsyncLoggers.Filter.Dependency
+namespace AsyncLoggers.Filter.Preloader.Dependency
 {
     public static class LethalConfigProxy
     {
@@ -21,6 +22,14 @@ namespace AsyncLoggers.Filter.Dependency
             }
         }
 
+        public static void ResetCache()
+        {
+            _enabled = null;
+        }
+        
+
+        public static Assembly PluginAssembly = Assembly.GetExecutingAssembly();
+
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void SkipAutoGen()
         {
@@ -30,54 +39,54 @@ namespace AsyncLoggers.Filter.Dependency
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void AddConfig(ConfigEntry<string> entry, bool requiresRestart = false)
         {
-            LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(entry, new TextInputFieldOptions()
+            LethalConfigManager.AddConfigItemForAssembly(new TextInputFieldConfigItem(entry, new TextInputFieldOptions()
             {
                 RequiresRestart = requiresRestart
-            }));
+            }), PluginAssembly);
         }
         
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void AddConfig(ConfigEntry<bool> entry, bool requiresRestart = false)
         {
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(entry, new BoolCheckBoxOptions()
+            LethalConfigManager.AddConfigItemForAssembly(new BoolCheckBoxConfigItem(entry, new BoolCheckBoxOptions()
             {
                 RequiresRestart = requiresRestart
-            }));
+            }), PluginAssembly);
         }
         
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void AddConfig(ConfigEntry<float> entry, bool requiresRestart = false)
         {
-            LethalConfigManager.AddConfigItem(new FloatInputFieldConfigItem(entry, new FloatInputFieldOptions()
+            LethalConfigManager.AddConfigItemForAssembly(new FloatInputFieldConfigItem(entry, new FloatInputFieldOptions()
             {
                 RequiresRestart = requiresRestart
-            }));
+            }), PluginAssembly);
         }
         
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void AddConfig(ConfigEntry<int> entry, bool requiresRestart = false)
         {
-            LethalConfigManager.AddConfigItem(new IntInputFieldConfigItem(entry, new IntInputFieldOptions()
+            LethalConfigManager.AddConfigItemForAssembly(new IntInputFieldConfigItem(entry, new IntInputFieldOptions()
             {
                 RequiresRestart = requiresRestart
-            }));
+            }), PluginAssembly);
         }
         
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void AddConfig<T>(ConfigEntry<T> entry, bool requiresRestart = false) where T : Enum
         {
-            LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<T>(entry, new EnumDropDownOptions()
+            LethalConfigManager.AddConfigItemForAssembly(new EnumDropDownConfigItem<T>(entry, new EnumDropDownOptions()
             {
                 RequiresRestart = requiresRestart,
                 CanModifyCallback = () => (false, "THIS IS A FLAG TYPE ENUM, EDITING CURRENTLY NOT SUPPORTED!")
-            }));
+            }), PluginAssembly);
         }
         
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void AddButton(string section, string name, string description, string buttonText, Action callback)
         {
-            LethalConfigManager.AddConfigItem(new GenericButtonConfigItem(
-                section, name, description, buttonText, () =>callback?.Invoke()));
+            LethalConfigManager.AddConfigItemForAssembly(new GenericButtonConfigItem(
+                section, name, description, buttonText, () =>callback?.Invoke()), PluginAssembly);
         }
         
         private static string GetPrettyConfigName<T>(ConfigEntry<T> entry)
