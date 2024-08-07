@@ -77,12 +77,6 @@ namespace AsyncLoggers.Filter.Dependency
         {
             return SqliteLogger.ExecutionId;
         }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        public static ILogSource GetLogger()
-        {
-            return AsyncLoggers.Log;
-        }
-    
+        
     }
 }
